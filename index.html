@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Replicando SVG com p5.js</title>
+
+  <!-- p5.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.1/lib/p5.min.js"></script>
+
+  <style>
+    body{
+      margin:0;
+      display:flex;
+      height:100vh;
+      justify-content:center;
+      align-items:center;
+    }
+  </style>
+</head>
+<body>
+<script>
+// Cores originais da arte
+const originalColors = {
+  bg: '#262729',
+  green: '#249547',
+  orange: '#D0791E',
+  blue: '#314AAF',
+  red: '#B31C18',
+  gray: '#C6C6BE'
+};
+
+// Cores atuais (inicialmente iguais às originais)
+let currentColors = {...originalColors};
+
+function setup(){
+  createCanvas(400, 400);
+}
+
+function draw(){
+  // Atualiza as cores baseadas na posição do mouse
+  updateColors();
+  
+  // Redesenha a arte com as cores atualizadas
+  noStroke();
+
+  fill(currentColors.bg);
+  rect(0, 0, 400, 400);
+
+  fill(currentColors.green);
+  beginShape();
+  vertex(207.5, 249.5);
+  vertex(250.5, 193);
+  vertex(400,   309.5);
+  vertex(400,   398.5);
+  endShape(CLOSE);
+
+  fill(currentColors.orange);
+  beginShape();
+  vertex(2,     399);
+  vertex(151.5, 205);
+  vertex(207.5, 249.5);
+  vertex(90.5,  399);
+  endShape(CLOSE);
+
+  fill(currentColors.blue);
+  beginShape();
+  vertex(250.5, 193);
+  vertex(195,   149);
+  vertex(311,   0);
+  vertex(398.5, 0);
+  endShape(CLOSE);
+
+  fill(currentColors.red);
+  beginShape();
+  vertex(195,   149);
+  vertex(4.5,   0.5);
+  vertex(0,     0.5);
+  vertex(0,     87);
+  vertex(151.5, 205);
+  vertex(175.5, 175);
+  endShape(CLOSE);
+
+  fill(currentColors.gray);
+  beginShape();
+  vertex(195,   149);
+  vertex(250.5, 193);
+  vertex(207.5, 249.5);
+  vertex(151.5, 205);
+  endShape(CLOSE);
+}
+
+function updateColors() {
+  // Define o centro da tela
+  const centerX = width / 2;
+  const centerY = height / 2;
+  
+  // Calcula a distância do mouse ao centro
+  const distToCenter = dist(mouseX, mouseY, centerX, centerY);
+  const maxDist = dist(0, 0, centerX, centerY);
+  
+  const centerThreshold = 50;
+  
+  if (distToCenter < centerThreshold) {
+    currentColors = {...originalColors};
+  } else {
+    // Caso contrário, ajusta as cores com base na posição do mouse
+    const normalizedDist = constrain(map(distToCenter, centerThreshold, maxDist, 0, 1), 0, 1);
+    
+    // Usa ângulo do mouse para influenciar as cores
+    const angle = atan2(mouseY - centerY, mouseX - centerX);
+    const hueShift = map(angle, -PI, PI, 0, 360);
+    
+    // Atualiza cada cor com base na posição do mouse
+    for (const key in originalColors) {
+      const col = color(originalColors[key]);
+      colorMode(HSB, 360, 100, 100);
+      
+      const h = hue(col);
+      const s = saturation(col);
+      const b = brightness(col);
+
+      const newH = (h + hueShift * normalizedDist) % 360;
+      const newS = constrain(s + (mouseX/width * 40 - 20) * normalizedDist, 0, 100);
+      const newB = constrain(b + (mouseY/height * 40 - 20) * normalizedDist, 0, 100);
+      
+      currentColors[key] = color(newH, newS, newB);
+      colorMode(RGB);
+    }
+  }
+}
+</script>
+</body>
+</html>
