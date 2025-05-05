@@ -1,6 +1,6 @@
 # Max Bill
 
-A Selecionada foi a obra do Max Bill, disponível em: [Link Obra](https://fotografia.folha.uol.com.br/galerias/1629381249913360-max-bill)
+A obra selecionada foi do Max Bill, disponível em: [Link Obra](https://fotografia.folha.uol.com.br/galerias/1629381249913360-max-bill)
 
 
 ## Obra do Max Bill
